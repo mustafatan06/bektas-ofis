@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bektaş Ofis Mobilyaları | Kalite ve Şıklık</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-red: #d32f2f;
+            --dark-gray: #212529;
+            --light-gray: #f8f9fa;
+            --white: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--white);
+            color: var(--dark-gray);
+            line-height: 1.6;
+        }
+
+        /* Sabit Kayan Duyuru Çubuğu */
+        .ticker-wrap {
+            background-color: var(--dark-gray);
+            color: var(--white);
+            overflow: hidden;
+            white-space: nowrap;
+            padding: 10px 0;
+            font-size: 14px;
+            font-weight: 600;
+            border-bottom: 2px solid var(--primary-red);
+            position: sticky;
+            top: 0;
+            z-index: 1001;
+        }
+
+        .ticker {
+            display: inline-block;
+            animation: ticker 25s linear infinite;
+            padding-left: 100%;
+        }
+
+        .ticker span {
+            margin-right: 50px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .ticker span i {
+            color: var(--primary-red);
+        }
+
+        @keyframes ticker {
+            0% { transform: translate3d(0, 0, 0); }
+            100% { transform: translate3d(-100%, 0, 0); }
+        }
+
+        header {
+            background-color: var(--white);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 41px;
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 15px 5%;
+        }
+
+        .logo-area { text-decoration: none; }
+        .logo-area h1 { font-size: 24px; color: var(--dark-gray); font-weight: 800; letter-spacing: 1px; }
+        .logo-area h1 span { color: var(--primary-red); }
+
+        .hero {
+            background: linear-gradient(rgba(33, 37, 41, 0.85), rgba(33, 37, 41, 0.85)), url('https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&w=1920&q=80') no-repeat center center/cover;
+            color: var(--white);
+            padding: 90px 5%;
+            text-align: center;
+        }
+
+        .hero h2 { font-size: 38px; margin-bottom: 15px; font-weight: 700; }
+        .hero p { font-size: 16px; max-width: 700px; margin: 0 auto 25px auto; color: #e0e0e0; }
+
+        .cta-buttons { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
+
+        .btn {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 12px 22px; font-size: 15px; font-weight: bold;
+            text-decoration: none; border-radius: 5px; transition: 0.3s; cursor: pointer;
+        }
+        .btn-call { background-color: var(--primary-red); color: var(--white); }
+        .btn-whatsapp { background-color: #25d366; color: var(--white); }
+
+        .section { padding: 60px 5%; text-align: center; }
+        .section h2 { font-size: 30px; margin-bottom: 8px; color: var(--dark-gray); }
+        .section .subtitle { color: #6c757d; margin-bottom: 40px; font-size: 15px; }
+
+        /* Yan Yana 4 Adet Tam Kare Vitrin ve Mobil Uyum */
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            text-align: left;
+        }
+
+        @media (max-width: 1200px) { .product-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 768px) { .product-grid { grid-template-columns: 1fr; } }
+
+        .product-card {
+            background: var(--white);
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid #eaeaea;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: transform 0.3s;
+            cursor: pointer;
+        }
+
+        .product-card:hover { transform: translateY(-5px); }
+
+        .image-wrapper {
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            overflow: hidden;
+            background: #f1f1f1;
+        }
+
+        .product-card img { width: 100%; height: 100%; object-fit: cover; }
+
+        .product-info { padding: 15px; }
+        .product-info h3 { font-size: 18px; margin-bottom: 6px; color: var(--dark-gray); }
+        .product-info p { color: #666; font-size: 13px; margin-bottom: 8px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .product-price { font-size: 17px; font-weight: 700; color: var(--primary-red); margin-bottom: 10px; }
+
+        /* Butonlar için Yanıp Sönen Neon Parıltı Efekti */
+        @keyframes neonPulseBtnRed {
+            0% { box-shadow: 0 0 0px rgba(211, 47, 47, 0.4); }
+            50% { box-shadow: 0 0 12px rgba(211, 47, 47, 0.9); }
+            100% { box-shadow: 0 0 0px rgba(211, 47, 47, 0.4); }
+        }
+
+        @keyframes neonPulseBtnGreen {
+            0% { box-shadow: 0 0 0px rgba(37, 211, 102, 0.4); }
+            50% { box-shadow: 0 0 12px rgba(37, 211, 102, 0.9); }
+            100% { box-shadow: 0 0 0px rgba(37, 211, 102, 0.4); }
+        }
+
+        .product-actions { display: flex; gap: 8px; padding: 0 15px 15px 15px; }
+        
+        .btn-call-action {
+            flex: 1;
+            background-color: var(--primary-red);
+            color: var(--white);
+            text-align: center;
+            padding: 10px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 13px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            animation: neonPulseBtnRed 2s infinite ease-in-out;
+        }
+
+        .btn-whatsapp-action {
+            flex: 1;
+            background-color: #25d366;
+            color: var(--white);
+            text-align: center;
+            padding: 10px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 13px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            animation: neonPulseBtnGreen 2s infinite ease-in-out;
+        }
+
+        /* Detay ve Çoklu Görsel Modalı (Mobil Uyumlu) */
+        #detail-modal {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85); z-index: 3000; justify-content: center; align-items: center; padding: 15px;
+        }
+        .detail-box {
+            background: white; width: 100%; max-width: 700px; border-radius: 10px; overflow: hidden; position: relative;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5); max-height: 90vh; display: flex; flex-direction: column;
+        }
+        .carousel-container { position: relative; width: 100%; height: 300px; background: #000; display: flex; align-items: center; justify-content: center; }
+        .carousel-container img { max-width: 100%; max-height: 100%; object-fit: contain; }
+        .carousel-btn { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.6); color: white; border: none; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center; }
+        .carousel-prev { left: 10px; } .carousel-next { right: 10px; }
+        .thumbnail-strip { display: flex; gap: 6px; padding: 8px; background: #f1f1f1; overflow-x: auto; justify-content: center; }
+        .thumbnail-strip img { width: 50px; height: 50px; object-fit: cover; border-radius: 4px; cursor: pointer; border: 2px solid transparent; opacity: 0.6; }
+        .thumbnail-strip img.active { border-color: var(--primary-red); opacity: 1; }
+        .detail-content { padding: 20px; text-align: left; overflow-y: auto; }
+        .detail-close { position: absolute; top: 12px; right: 12px; background: rgba(0,0,0,0.7); color: white; border: none; width: 32px; height: 32px; border-radius: 50%; font-size: 16px; cursor: pointer; z-index: 10; }
+
+        .contact-section { background-color: var(--light-gray); padding: 60px 5%; }
+        .contact-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; }
+        .contact-info-box h3 { font-size: 22px; margin-bottom: 15px; color: var(--dark-gray); }
+        .contact-detail { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 15px; }
+        .contact-detail i { color: var(--primary-red); font-size: 18px; margin-top: 4px; }
+        .map-box iframe { width: 100%; height: 280px; border: 0; border-radius: 8px; }
+
+        footer { background-color: var(--dark-gray); color: var(--white); text-align: center; padding: 20px 5%; font-size: 14px; }
+
+        @media(max-width: 768px) {
+            .hero h2 { font-size: 28px; }
+            .hero p { font-size: 14px; }
+            .carousel-container { height: 220px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sabit Kayan Duyuru Çubuğu -->
+    <div class="ticker-wrap">
+        <div class="ticker">
+            <span><i class="fa-solid fa-truck-fast"></i> Ankara içi aynı gün teslim</span>
+            <span><i class="fa-solid fa-screwdriver-wrench"></i> Ücretsiz kurulum ve montaj</span>
+            <span><i class="fa-solid fa-ruler-combined"></i> İstediğiniz ölçülerde özel tasarım toplantı masaları ve ofis mobilyaları</span>
+            <span><i class="fa-solid fa-star"></i> Bektaş Ofis Mobilyaları Kalitesiyle</span>
+        </div>
+    </div>
+
+    <header>
+        <a href="#anasayfa" class="logo-area">
+            <h1>BEKTAŞ <span>OFİS</span></h1>
+        </a>
+    </header>
+
+    <section id="anasayfa" class="hero">
+        <h2>Ofisiniz İçin Prestij ve Konfor</h2>
+        <p>Makam takımları, ergonomik ofis koltukları ve modern çalışma gruplarıyla iş yerinize değer katıyoruz.</p>
+        <div class="cta-buttons">
+            <a href="tel:05310206728" class="btn btn-call">
+                <i class="fa-solid fa-phone-volume"></i> Hemen Ara: 0531 020 67 28
+            </a>
+            <a href="https://wa.me/905310206728?text=Merhaba,%20ofis%20mobilyaları%20hakkında%20bilgi%20almak%20istiyorum." target="_blank" class="btn btn-whatsapp">
+                <i class="fa-brands fa-whatsapp"></i> WhatsApp Destek
+            </a>
+        </div>
+    </section>
+
+    <!-- Ürünler Vitrini -->
+    <section class="section">
+        <h2>Ürün Vitrini</h2>
+        <p class="subtitle">Ürünleri yakından incelemek için üzerine tıklayabilirsiniz</p>
+        
+        <div class="product-grid" id="home-product-grid"></div>
+    </section>
+
+    <!-- Ürün Detay ve Çoklu Görsel Modal -->
+    <div id="detail-modal">
+        <div class="detail-box">
+            <button class="detail-close" onclick="closeDetailModal()">&times;</button>
+            <div class="carousel-container">
+                <button class="carousel-btn carousel-prev" onclick="changeSlide(-1)"><i class="fa-solid fa-chevron-left"></i></button>
+                <img id="modal-main-img" src="" alt="Ürün Görseli">
+                <button class="carousel-btn carousel-next" onclick="changeSlide(1)"><i class="fa-solid fa-chevron-right"></i></button>
+            </div>
+            <div class="thumbnail-strip" id="modal-thumbnails"></div>
+            <div class="detail-content">
+                <h3 id="modal-title" style="font-size:20px; margin-bottom:8px;"></h3>
+                <p id="modal-desc" style="color:#666; font-size:13px; margin-bottom:12px;"></p>
+                <div id="modal-price" style="font-size:20px; font-weight:bold; color:var(--primary-red); margin-bottom:15px;"></div>
+                <div style="display:flex; gap:10px;">
+                    <a href="tel:05310206728" class="btn-call-action" style="padding:10px;"><i class="fa-solid fa-phone"></i> Hemen Ara</a>
+                    <a id="modal-whatsapp" href="#" target="_blank" class="btn-whatsapp-action" style="padding:10px;"><i class="fa-brands fa-whatsapp"></i> WhatsApp</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- İletişim ve Harita -->
+    <section id="iletisim" class="contact-section">
+        <div class="section" style="padding: 0 0 30px 0;">
+            <h2>İletişim Bilgilerimiz</h2>
+            <p class="subtitle">Mağazamıza bekleriz veya hemen bizimle iletişime geçin</p>
+        </div>
+        
+        <div class="contact-container">
+            <div class="contact-info-box">
+                <h3>Bektaş Ofis Mobilyaları</h3>
+                <div class="contact-detail"><i class="fa-solid fa-user-tie"></i><p><strong>Yetkili:</strong> Yasin Bektaş</p></div>
+                <div class="contact-detail"><i class="fa-solid fa-location-dot"></i><p><strong>Adres:</strong> Kavacık Subayevleri, Hendek Sk. 7/B, 06312 Keçiören/Ankara</p></div>
+                <div class="contact-detail"><i class="fa-solid fa-phone"></i><p><strong>Telefon:</strong> <a href="tel:05310206728" style="color:var(--primary-red); text-decoration:none; font-weight:bold;">0531 020 67 28</a></p></div>
+            </div>
+            <div class="map-box">
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3055.975!2d32.86!3d39.97!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMznCsDU4JzEyLjAiTiAzMsKwNTEnMzYuMCJF!5e0!3m2!1str!2str!4v1600000000000" allowfullscreen="" loading="lazy"></iframe>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2026 Bektaş Ofis Mobilyaları - Yasin Bektaş. Tüm hakları saklıdır.</p>
+    </footer>
+
+    <script>
+        const defaultProducts = [
+            { id: 1, name: "Prestige Yönetici Takımı", price: "24.500 ₺", desc: "Ceviz kaplama ahşap detaylar ve deri kombinasyonlu prestijli set.", images: ["https://images.unsplash.com/photo-1580481077494-e3299acae58d?auto=format&fit=crop&w=600&q=80", "https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&w=600&q=80"] },
+            { id: 2, name: "Ergonomik Fileli Koltuk", price: "6.800 ₺", desc: "Uzun saatler konfor sunan bel ve sırt destekli terletmeyen file model.", images: ["https://images.unsplash.com/photo-1541558853414-4c4c15372379?auto=format&fit=crop&w=600&q=80", "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=600&q=80"] }
+        ];
+
+        function getProducts() {
+            let saved = JSON.parse(localStorage.getItem('bektas_products'));
+            if(saved) {
+                return saved.map(p => ({
+                    ...p,
+                    images: p.images || (p.image ? [p.image] : ["https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&w=600&q=80"])
+                }));
+            }
+            return defaultProducts;
+        }
+
+        function renderSite() {
+            const grid = document.getElementById('home-product-grid');
+            const products = getProducts();
+
+            grid.innerHTML = products.map(p => {
+                let firstImg = p.images && p.images.length > 0 ? p.images[0] : "https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&w=600&q=80";
+                return `
+                    <div class="product-card" onclick="openDetailModal(${p.id})">
+                        <div class="image-wrapper">
+                            <img src="${firstImg}" alt="${p.name}">
+                        </div>
+                        <div class="product-info">
+                            <h3>${p.name}</h3>
+                            <p>${p.desc}</p>
+                            <div class="product-price">${p.price}</div>
+                        </div>
+                        <div class="product-actions" onclick="event.stopPropagation()">
+                            <a href="tel:05310206728" class="btn-call-action"><i class="fa-solid fa-phone"></i> Hemen Ara</a>
+                            <a href="https://wa.me/905310206728?text=Merhaba,%20${encodeURIComponent(p.name)}%20ürünü%20için%20bilgi%20almak%20istiyorum." target="_blank" class="btn-whatsapp-action"><i class="fa-brands fa-whatsapp"></i> WhatsApp</a>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        let currentProductImages = [];
+        let currentSlideIndex = 0;
+
+        function openDetailModal(productId) {
+            const products = getProducts();
+            const product = products.find(p => p.id === productId);
+            if(!product) return;
+
+            document.getElementById('modal-title').innerText = product.name;
+            document.getElementById('modal-desc').innerText = product.desc;
+            document.getElementById('modal-price').innerText = product.price;
+            document.getElementById('modal-whatsapp').href = `https://wa.me/905310206728?text=Merhaba,%20${encodeURIComponent(product.name)}%20ürünü%20için%20sipariş%20vermek%20istiyorum.`;
+
+            currentProductImages = product.images && product.images.length > 0 ? product.images : ["https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&w=600&q=80"];
+            currentSlideIndex = 0;
+            updateSlide();
+            renderThumbnails();
+
+            document.getElementById('detail-modal').style.display = 'flex';
+        }
+
+        function updateSlide() {
+            document.getElementById('modal-main-img').src = currentProductImages[currentSlideIndex];
+            const thumbs = document.querySelectorAll('.thumbnail-strip img');
+            thumbs.forEach((t, i) => {
+                if(i === currentSlideIndex) t.classList.add('active');
+                else t.classList.remove('active');
+            });
+        }
+
+        function changeSlide(direction) {
+            currentSlideIndex += direction;
+            if(currentSlideIndex < 0) currentSlideIndex = currentProductImages.length - 1;
+            if(currentSlideIndex >= currentProductImages.length) currentSlideIndex = 0;
+            updateSlide();
+        }
+
+        function setSlide(index) {
+            currentSlideIndex = index;
+            updateSlide();
+        }
+
+        function renderThumbnails() {
+            const strip = document.getElementById('modal-thumbnails');
+            strip.innerHTML = currentProductImages.map((img, idx) => `
+                <img src="${img}" class="${idx === 0 ? 'active' : ''}" onclick="setSlide(${idx})">
+            `).join('');
+        }
+
+        function closeDetailModal() {
+            document.getElementById('detail-modal').style.display = 'none';
+        }
+
+        window.addEventListener('DOMContentLoaded', renderSite);
+    </script>
+</body>
+</html>

@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yönetim Paneli | Bektaş Ofis Mobilyaları</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-red: #d32f2f;
+            --dark-gray: #212529;
+            --light-gray: #f8f9fa;
+            --white: #ffffff;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: var(--light-gray); color: var(--dark-gray); padding: 20px; }
+        .admin-container { max-width: 800px; margin: 0 auto; background: var(--white); padding: 25px; border-radius: 10px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+        .admin-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #eee; padding-bottom: 15px; margin-bottom: 20px; flex-wrap: wrap; gap: 10px; }
+        .admin-header h1 { font-size: 20px; color: var(--dark-gray); }
+        .admin-header a { text-decoration: none; background: var(--dark-gray); color: white; padding: 8px 15px; border-radius: 5px; font-size: 14px; }
+        .form-group { margin-bottom: 15px; text-align: left; }
+        .form-group label { display: block; font-weight: bold; margin-bottom: 5px; font-size: 14px; }
+        .form-group input, .form-group textarea { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 15px; }
+        #form-submit-btn { width: 100%; background-color: var(--primary-red); color: white; border: none; padding: 12px; font-size: 16px; font-weight: bold; border-radius: 5px; cursor: pointer; transition: 0.3s; }
+        #form-submit-btn:hover { background-color: #b71c1c; }
+        .admin-product-item { display: flex; align-items: center; justify-content: space-between; background: #fafafa; padding: 10px; border-radius: 6px; margin-bottom: 10px; border: 1px solid #ddd; flex-wrap: wrap; gap: 10px; }
+        .admin-buttons { display: flex; gap: 6px; }
+        .btn-delete { background-color: var(--primary-red); color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 13px; }
+        .btn-edit { background-color: #37474f; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 13px; }
+    </style>
+</head>
+<body>
+
+    <div class="admin-container">
+        <div class="admin-header">
+            <h1><i class="fa-solid fa-sliders"></i> Ürün Yönetim Paneli</h1>
+            <a href="index.html"><i class="fa-solid fa-globe"></i> Siteye Git</a>
+        </div>
+
+        <form id="product-form">
+            <input type="hidden" id="p-edit-id" value="">
+            <div class="form-group">
+                <label>Ürün Adı:</label>
+                <input type="text" id="p-name" required placeholder="Örn: Lüks Yönetici Takımı">
+            </div>
+            <div class="form-group">
+                <label>Fiyat (₺):</label>
+                <input type="text" id="p-price" required placeholder="Örn: 15.000 ₺">
+            </div>
+            <div class="form-group">
+                <label>Açıklama:</label>
+                <textarea id="p-desc" rows="2" required placeholder="Özellikler..."></textarea>
+            </div>
+            <div class="form-group">
+                <label>Birden Fazla Görsel Ekle:</label>
+                <input type="file" id="p-image-files" accept="image/*" multiple>
+                <input type="text" id="p-image-urls" placeholder="Veya internet görsel linkleri (virgülle ayırarak)" style="margin-top:8px;">
+            </div>
+            <button type="submit" id="form-submit-btn">Yeni Ürün Ekle</button>
+        </form>
+
+        <div style="margin-top: 35px;">
+            <h3 style="margin-bottom: 15px; font-size: 18px;">Mevcut Ürünleri Düzenle / Sil</h3>
+            <div id="admin-product-list" style="max-height: 250px; overflow-y: auto;"></div>
+        </div>
+    </div>
+
+    <script>
+        function getProducts() {
+            let saved = JSON.parse(localStorage.getItem('bektas_products'));
+            if(saved) {
+                return saved.map(p => ({
+                    ...p,
+                    images: p.images || (p.image ? [p.image] : [])
+                }));
+            }
+            return [
+                { id: 1, name: "Prestige Yönetici Takımı", price: "24.500 ₺", desc: "Ceviz kaplama ahşap detaylar ve deri kombinasyonlu prestijli set.", images: ["https://images.unsplash.com/photo-1580481077494-e3299acae58d?auto=format&fit=crop&w=600&q=80", "https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&w=600&q=80"] }
+            ];
+        }
+
+        function saveProducts(products) {
+            localStorage.setItem('bektas_products', JSON.stringify(products));
+        }
+
+        function renderAdminList() {
+            const adminList = document.getElementById('admin-product-list');
+            const products = getProducts();
+            adminList.innerHTML = products.map(p => {
+                let thumb = p.images && p.images.length > 0 ? p.images[0] : "";
+                return `
+                    <div class="admin-product-item">
+                        <div style="display:flex; align-items:center; gap:10px;">
+                            <img src="${thumb}" style="width:40px; height:40px; object-fit:cover; border-radius:4px;">
+                            <div>
+                                <strong style="font-size:14px;">${p.name}</strong> (${p.images.length} Görsel)<br>
+                                <span style="color:var(--primary-red); font-size:13px; font-weight:bold;">${p.price}</span>
+                            </div>
+                        </div>
+                        <div class="admin-buttons">
+                            <button class="btn-edit" onclick="editProduct(${p.id})">Düzenle</button>
+                            <button class="btn-delete" onclick="deleteProduct(${p.id})">Sil</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        let editingImages = [];
+
+        function editProduct(id) {
+            const products = getProducts();
+            const product = products.find(p => p.id === id);
+            if(product) {
+                document.getElementById('p-edit-id').value = product.id;
+                document.getElementById('p-name').value = product.name;
+                document.getElementById('p-price').value = product.price;
+                document.getElementById('p-desc').value = product.desc;
+                editingImages = product.images || [];
+                document.getElementById('p-image-urls').value = editingImages.filter(img => !img.startsWith('data:')).join(', ');
+                
+                document.getElementById('form-submit-btn').innerText = "Ürünü Güncelle";
+                document.getElementById('form-submit-btn').style.background = "#37474f";
+                window.scrollTo({top: 0, behavior: 'smooth'});
+            }
+        }
+
+        function resetForm() {
+            document.getElementById('product-form').reset();
+            document.getElementById('p-edit-id').value = "";
+            editingImages = [];
+            document.getElementById('form-submit-btn').innerText = "Yeni Ürün Ekle";
+            document.getElementById('form-submit-btn').style.background = "var(--primary-red)";
+        }
+
+        function deleteProduct(id) {
+            let products = getProducts();
+            products = products.filter(p => p.id !== id);
+            saveProducts(products);
+            renderAdminList();
+            resetForm();
+            alert('Ürün silindi!');
+        }
+
+        document.getElementById('product-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const editId = document.getElementById('p-edit-id').value;
+            const name = document.getElementById('p-name').value;
+            const price = document.getElementById('p-price').value;
+            const desc = document.getElementById('p-desc').value;
+            const imageFiles = document.getElementById('p-image-files').files;
+            const imageUrlsInput = document.getElementById('p-image-urls').value;
+
+            let products = getProducts();
+            let finalImages = [...editingImages];
+
+            if(imageUrlsInput.trim() !== "") {
+                const urlList = imageUrlsInput.split(',').map(s => s.trim()).filter(s => s);
+                finalImages = [...urlList, ...finalImages.filter(img => img.startsWith('data:'))];
+            }
+
+            if (imageFiles && imageFiles.length > 0) {
+                let loadedCount = 0;
+                let newFileImages = [];
+                Array.from(imageFiles).forEach((file, index) => {
+                    const reader = new FileReader();
+                    reader.onload = function(uploadEvent) {
+                        newFileImages[index] = uploadEvent.target.result;
+                        loadedCount++;
+                        if(loadedCount === imageFiles.length) {
+                            finalImages = [...newFileImages, ...finalImages];
+                            saveItem(editId, name, price, desc, finalImages, products);
+                        }
+                    };
+                    reader.readAsDataURL(file);
+                });
+            } else {
+                if(finalImages.length === 0) {
+                    finalImages = ["https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&w=600&q=80"];
+                }
+                saveItem(editId, name, price, desc, finalImages, products);
+            }
+        });
+
+        function saveItem(editId, name, price, desc, images, products) {
+            if(editId) {
+                products = products.map(p => p.id == editId ? { id: Number(editId), name, price, desc, images } : p);
+                alert('Ürün başarıyla güncellendi!');
+            } else {
+                products.unshift({ id: Date.now(), name, price, desc, images });
+                alert('Yeni ürün başarıyla eklendi!');
+            }
+            saveProducts(products);
+            resetForm();
+            renderAdminList();
+        }
+
+        window.addEventListener('DOMContentLoaded', renderAdminList);
+    </script>
+</body>
+</html>
