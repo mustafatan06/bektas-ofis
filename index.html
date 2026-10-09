@@ -11,6 +11,7 @@
             --dark-gray: #212529;
             --light-gray: #f8f9fa;
             --white: #ffffff;
+            --brand-orange: #ff9800;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; scroll-behavior: smooth; }
@@ -74,7 +75,6 @@
         .btn-call-action { flex: 1; background-color: var(--primary-red); color: var(--white); text-align: center; padding: 10px; border-radius: 5px; text-decoration: none; font-weight: bold; font-size: 13px; display: inline-flex; align-items: center; justify-content: center; gap: 6px; animation: neonPulseBtnRed 2s infinite ease-in-out; }
         .btn-whatsapp-action { flex: 1; background-color: #25d366; color: var(--white); text-align: center; padding: 10px; border-radius: 5px; text-decoration: none; font-weight: bold; font-size: 13px; display: inline-flex; align-items: center; justify-content: center; gap: 6px; animation: neonPulseBtnGreen 2s infinite ease-in-out; }
 
-        /* Modal ve Admin Panel Tasarımı */
         #detail-modal, #admin-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 3000; justify-content: center; align-items: center; padding: 15px; }
         .detail-box, .admin-box { background: white; width: 100%; max-width: 650px; border-radius: 10px; overflow: hidden; position: relative; box-shadow: 0 10px 30px rgba(0,0,0,0.5); max-height: 90vh; display: flex; flex-direction: column; }
         .admin-box { padding: 25px; overflow-y: auto; text-align: left; }
@@ -103,7 +103,11 @@
         .contact-detail { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 15px; }
         .contact-detail i { color: var(--primary-red); font-size: 18px; margin-top: 4px; }
         .map-box iframe { width: 100%; height: 280px; border: 0; border-radius: 8px; }
-        footer { background-color: var(--dark-gray); color: var(--white); text-align: center; padding: 20px 5%; font-size: 14px; cursor: pointer; }
+        
+        footer { background-color: var(--dark-gray); color: var(--white); text-align: center; padding: 25px 5%; font-size: 14px; cursor: pointer; }
+        .footer-credit { margin-top: 8px; font-size: 13px; font-weight: 600; }
+        .footer-credit span { color: var(--brand-orange); }
+        .footer-credit small { display: block; color: var(--white); font-weight: normal; font-size: 11px; margin-top: 2px; }
     </style>
 </head>
 <body>
@@ -158,7 +162,7 @@
         </div>
     </div>
 
-    <!-- Gizli Şifreli Admin Paneli Modalı -->
+    <!-- Şifreli Admin Paneli Modalı -->
     <div id="admin-modal">
         <div class="admin-box">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
@@ -181,8 +185,9 @@
                     <textarea id="p-desc" rows="2" required placeholder="Özellikler..."></textarea>
                 </div>
                 <div class="form-group">
-                    <label>Görsel Linkleri (Virgülle ayırarak https://...):</label>
-                    <input type="text" id="p-image-urls" required placeholder="https://resim1.jpg, https://resim2.jpg">
+                    <label>Görsel Seç (Bilgisayardan veya Telefondan):</label>
+                    <input type="file" id="p-image-file" accept="image/*" multiple style="width:100%; padding:6px; border:1px solid #ccc; border-radius:4px; background:#f9f9f9;">
+                    <small style="color:#666;">Birden fazla fotoğraf seçebilirsiniz.</small>
                 </div>
                 <button type="submit" id="form-submit-btn" style="width:100%; background:var(--primary-red); color:white; border:none; padding:10px; font-weight:bold; border-radius:4px; cursor:pointer;">Yeni Ürün Ekle</button>
             </form>
@@ -212,9 +217,13 @@
         </div>
     </section>
 
-    <!-- Footer yazısına 3 kez tıklayınca şifreli admin paneli açılır -->
+    <!-- Footer'a 3 kez tıklayınca şifre sorar -->
     <footer onclick="checkAdminTrigger()">
         <p>&copy; 2026 Bektaş Ofis Mobilyaları - Yasin Bektaş. Tüm hakları saklıdır.</p>
+        <div class="footer-credit">
+            <span>TAN MEDYA TASARIM</span>
+            <small>Tarafından Kurulmuştur</small>
+        </div>
     </footer>
 
     <!-- Firebase ve Site Mantığı -->
@@ -236,6 +245,7 @@
         const db = getFirestore(app);
 
         let globalProducts = [];
+        let editingImages = [];
 
         async function loadProducts() {
             const grid = document.getElementById('home-product-grid');
@@ -275,7 +285,7 @@
                     listEl.innerHTML = globalProducts.map(p => `
                         <div class="admin-product-item">
                             <div style="display:flex; align-items:center; gap:8px;">
-                                <img src="${p.images[0]}" style="width:30px; height:30px; object-fit:cover; border-radius:3px;">
+                                <img src="${p.images && p.images[0] ? p.images[0] : ''}" style="width:30px; height:30px; object-fit:cover; border-radius:3px;">
                                 <span style="font-size:13px; font-weight:bold;">${p.name}</span>
                             </div>
                             <div class="admin-buttons">
@@ -290,7 +300,6 @@
             }
         }
 
-        // 3 Tıklama ve Şifre Kontrolü
         let clickCount = 0;
         window.checkAdminTrigger = function() {
             clickCount++;
@@ -317,7 +326,7 @@
                 document.getElementById('p-name').value = p.name;
                 document.getElementById('p-price').value = p.price;
                 document.getElementById('p-desc').value = p.desc;
-                document.getElementById('p-image-urls').value = p.images ? p.images.join(', ') : '';
+                editingImages = p.images || [];
                 document.getElementById('form-submit-btn').innerText = "Ürünü Güncelle";
                 document.getElementById('form-submit-btn').style.background = "#37474f";
             }
@@ -338,27 +347,72 @@
             const name = document.getElementById('p-name').value;
             const price = document.getElementById('p-price').value;
             const desc = document.getElementById('p-desc').value;
-            const images = document.getElementById('p-image-urls').value.split(',').map(s => s.trim()).filter(s => s);
+            const imageFiles = document.getElementById('p-image-file').files;
 
-            try {
-                if(editId) {
-                    await updateDoc(doc(db, "products", editId), { name, price, desc, images });
-                    alert("Ürün güncellendi!");
-                } else {
-                    await addDoc(collection(db, "products"), { name, price, desc, images });
-                    alert("Yeni ürün eklendi!");
+            let finalImages = [...editingImages];
+
+            const saveToDb = async (imgs) => {
+                try {
+                    if(editId) {
+                        await updateDoc(doc(db, "products", editId), { name, price, desc, images: imgs });
+                        alert("Ürün güncellendi!");
+                    } else {
+                        if(imgs.length === 0) imgs = ["https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&w=600&q=80"];
+                        await addDoc(collection(db, "products"), { name, price, desc, images: imgs });
+                        alert("Yeni ürün eklendi!");
+                    }
+                    document.getElementById('product-form').reset();
+                    document.getElementById('p-edit-id').value = "";
+                    editingImages = [];
+                    document.getElementById('form-submit-btn').innerText = "Yeni Ürün Ekle";
+                    document.getElementById('form-submit-btn').style.background = "var(--primary-red)";
+                    loadProducts();
+                } catch(err) {
+                    alert("İşlem başarısız oldu!");
                 }
-                document.getElementById('product-form').reset();
-                document.getElementById('p-edit-id').value = "";
-                document.getElementById('form-submit-btn').innerText = "Yeni Ürün Ekle";
-                document.getElementById('form-submit-btn').style.background = "var(--primary-red)";
-                loadProducts();
-            } catch(err) {
-                alert("İşlem başarısız oldu!");
+            };
+
+            if (imageFiles && imageFiles.length > 0) {
+                let loadedCount = 0;
+                let newImages = [];
+                Array.from(imageFiles).forEach((file, idx) => {
+                    const reader = new FileReader();
+                    reader.onload = function(evt) {
+                        const img = new Image();
+                        img.src = evt.target.result;
+                        img.onload = function() {
+                            const canvas = document.createElement('canvas');
+                            const MAX_WIDTH = 800;
+                            const MAX_HEIGHT = 800;
+                            let width = img.width;
+                            let height = img.height;
+
+                            if (width > height) {
+                                if (width > MAX_WIDTH) { height *= MAX_WIDTH / width; width = MAX_WIDTH; }
+                            } else {
+                                if (height > MAX_HEIGHT) { width *= MAX_HEIGHT / height; height = MAX_HEIGHT; }
+                            }
+
+                            canvas.width = width;
+                            canvas.height = height;
+                            const ctx = canvas.getContext('2d');
+                            ctx.drawImage(img, 0, 0, width, height);
+                            
+                            newImages[idx] = canvas.toDataURL('image/jpeg', 0.8);
+                            loadedCount++;
+                            if(loadedCount === imageFiles.length) {
+                                finalImages = [...newImages, ...finalImages];
+                                saveToDb(finalImages);
+                            }
+                        }
+                    };
+                    reader.readAsDataURL(file);
+                });
+            } else {
+                saveToDb(finalImages);
             }
         });
 
-        // Detay Modalı Mantığı
         let currentProductImages = [];
         let currentSlideIndex = 0;
 
