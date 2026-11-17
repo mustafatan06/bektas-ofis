@@ -290,8 +290,8 @@
             const grid = document.getElementById('home-product-grid');
             const listEl = document.getElementById('admin-product-list');
             try {
-                // Koleksiyon adı "ürünler" olarak ayarlandı
-                const querySnapshot = await getDocs(collection(db, "ürünler"));
+                // Doğrudan Firebase'deki "products" koleksiyonuna bağlanır
+                const querySnapshot = await getDocs(collection(db, "products"));
                 globalProducts = [];
                 querySnapshot.forEach((d) => {
                     globalProducts.push({ id: d.id, ...d.data() });
@@ -374,7 +374,7 @@
 
         window.deleteItem = function(id) {
             if(confirm("Bu ürünü silmek istediğinize emin misiniz?")) {
-                deleteDoc(doc(db, "ürünler", id)).then(() => {
+                deleteDoc(doc(db, "products", id)).then(() => {
                     alert("Ürün silindi!");
                     loadProducts();
                 });
@@ -394,11 +394,11 @@
             const saveToDb = async (imgs) => {
                 try {
                     if(editId) {
-                        await updateDoc(doc(db, "ürünler", editId), { name, price, desc, images: imgs });
+                        await updateDoc(doc(db, "products", editId), { name, price, desc, images: imgs });
                         alert("Ürün güncellendi!");
                     } else {
                         if(imgs.length === 0) imgs = ["https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&w=600&q=80"];
-                        await addDoc(collection(db, "ürünler"), { name, price, desc, images: imgs });
+                        await addDoc(collection(db, "products"), { name, price, desc, images: imgs });
                         alert("Yeni ürün eklendi!");
                     }
                     document.getElementById('product-form').reset();
