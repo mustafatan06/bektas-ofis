@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <!-- SEO Meta Etiketleri ve Ankara Odaklı Anahtar Kelimeler -->
     <title>Bektaş Ofis Mobilyaları | Ankara Ofis Mobilyası, Makam Takımları, Toplantı Masası</title>
     <meta name="description" content="Ankara'da ankara ofis mobilyası, pilot makam, makam takımları, ofis takımları, ofis sandalyesi, ofis koltuğu, makam koltuğu ve chester koltuk imalat ve satışında lider adres. Aynı gün teslim ve ücretsiz kurulum.">
     <meta name="keywords" content="ankara ofis mobilyası, pilot makam, makam takımları, ofis takımları, ofis sandalyesi, ofis koltuğu, makam koltuğu, chester koltuk, ankara toplantı masası, bektas ofis mobilyalari">
@@ -267,7 +266,6 @@
         </div>
     </footer>
 
-    <!-- Firebase ve Site Mantığı (koleksiyon adı "ürünler" olarak ayarlandı) -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, collection, getDocs, addDoc, updateDoc, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -292,7 +290,7 @@
             const grid = document.getElementById('home-product-grid');
             const listEl = document.getElementById('admin-product-list');
             try {
-                // Firebase'deki koleksiyon adı "ürünler" ile eşitlendi
+                // Koleksiyon adı "ürünler" olarak ayarlandı
                 const querySnapshot = await getDocs(collection(db, "ürünler"));
                 globalProducts = [];
                 querySnapshot.forEach((d) => {
