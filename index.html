@@ -10,13 +10,10 @@
     <meta name="keywords" content="ankara ofis mobilyası, pilot makam, makam takımları, ofis takımları, ofis sandalyesi, ofis koltuğu, makam koltuğu, chester koltuk, ankara toplantı masası, bektas ofis mobilyalari">
     <meta name="author" content="Tan Medya Tasarım">
     <meta name="robots" content="index, follow">
-
-    <!-- Google Arama Motoru Doğrulama Etiketi (Search Console için eklendi) -->
     <meta name="google-site-verification" content="45AvBhHPJ0CzgaCbI1ADdBKio19cN_oNQBnEf8VJqjM">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- Google Yerel İşletme ve SEO Yapılandırılmış Veri (Schema.org) -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -63,7 +60,6 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; scroll-behavior: smooth; }
         body { background-color: var(--white); color: var(--dark-gray); line-height: 1.6; }
 
-        /* Sabit Kayan Duyuru Çubuğu */
         .ticker-wrap {
             background-color: var(--dark-gray); color: var(--white); overflow: hidden; white-space: nowrap;
             padding: 10px 0; font-size: 14px; font-weight: 600; border-bottom: 2px solid var(--primary-red);
@@ -158,7 +154,6 @@
 </head>
 <body>
 
-    <!-- Ankara ve Aranan Ürün Odaklı Zenginleştirilmiş Kayan Duyuru Çubuğu -->
     <div class="ticker-wrap">
         <div class="ticker">
             <span><i class="fa-solid fa-truck-fast"></i> Ankara İçi Aynı Gün Teslim</span>
@@ -189,7 +184,6 @@
         <div class="product-grid" id="home-product-grid">Yükleniyor...</div>
     </section>
 
-    <!-- Ürün Detay Modalı -->
     <div id="detail-modal">
         <div class="detail-box">
             <button class="detail-close" onclick="closeDetailModal()">&times;</button>
@@ -211,7 +205,6 @@
         </div>
     </div>
 
-    <!-- Şifreli Admin Paneli Modalı -->
     <div id="admin-modal">
         <div class="admin-box">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
@@ -266,7 +259,6 @@
         </div>
     </section>
 
-    <!-- Footer ve Tan Medya Tasarım İmzası -->
     <footer onclick="checkAdminTrigger()">
         <p>&copy; 2026 Bektaş Ofis Mobilyaları - Yasin Bektaş. Ankara Ofis Mobilyaları. Tüm hakları saklıdır.</p>
         <div class="footer-credit">
@@ -275,7 +267,7 @@
         </div>
     </footer>
 
-    <!-- Firebase ve Site Mantığı -->
+    <!-- Firebase ve Site Mantığı (koleksiyon adı "ürünler" olarak ayarlandı) -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, collection, getDocs, addDoc, updateDoc, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -300,7 +292,8 @@
             const grid = document.getElementById('home-product-grid');
             const listEl = document.getElementById('admin-product-list');
             try {
-                const querySnapshot = await getDocs(collection(db, "products"));
+                // Firebase'deki koleksiyon adı "ürünler" ile eşitlendi
+                const querySnapshot = await getDocs(collection(db, "ürünler"));
                 globalProducts = [];
                 querySnapshot.forEach((d) => {
                     globalProducts.push({ id: d.id, ...d.data() });
@@ -383,7 +376,7 @@
 
         window.deleteItem = function(id) {
             if(confirm("Bu ürünü silmek istediğinize emin misiniz?")) {
-                deleteDoc(doc(db, "products", id)).then(() => {
+                deleteDoc(doc(db, "ürünler", id)).then(() => {
                     alert("Ürün silindi!");
                     loadProducts();
                 });
@@ -403,11 +396,11 @@
             const saveToDb = async (imgs) => {
                 try {
                     if(editId) {
-                        await updateDoc(doc(db, "products", editId), { name, price, desc, images: imgs });
+                        await updateDoc(doc(db, "ürünler", editId), { name, price, desc, images: imgs });
                         alert("Ürün güncellendi!");
                     } else {
                         if(imgs.length === 0) imgs = ["https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&w=600&q=80"];
-                        await addDoc(collection(db, "products"), { name, price, desc, images: imgs });
+                        await addDoc(collection(db, "ürünler"), { name, price, desc, images: imgs });
                         alert("Yeni ürün eklendi!");
                     }
                     document.getElementById('product-form').reset();
